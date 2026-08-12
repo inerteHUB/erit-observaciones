@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "ERIT Observaciones",
+    "slug": "erit-observaciones",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "com.eritobservaciones.app",
+      "permissions": ["CAMERA"]
+    },
+    "plugins": ["expo-camera"]
+  }
+}

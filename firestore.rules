@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function estaAutenticado() {
+      return request.auth != null;
+    }
+
+    function rolActual() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol_id;
+    }
+
+    function puedeEjecutar() {
+      return rolActual() in ['gestor', 'admin'];
+    }
+
+    match /usuarios/{usuarioId} {
+      allow read: if estaAutenticado();
+      allow write: if false; // se administra fuera de la app (por ahora, manualmente)
+    }
+
+    match /observaciones/{obsId} {
+      allow read: if estaAutenticado();
+      allow create: if estaAutenticado();
+      allow update: if estaAutenticado() && puedeEjecutar();
+      allow delete: if false;
+    }
+
+    match /categorias/{catId} {
+      allow read: if estaAutenticado();
+      allow write: if false;
+    }
+
+    match /ubicaciones/{ubiId} {
+      allow read: if estaAutenticado();
+      allow write: if false;
+    }
+
+    match /tiendas/{tiendaId} {
+      allow read: if estaAutenticado();
+      allow write: if false;
+    }
+  }
+}
